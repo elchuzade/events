@@ -119,4 +119,20 @@ router.post(
   }
 );
 
+// @route GET api/profile/
+// @desc Get my profile
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => res.status(201).json(profile))
+      .catch(err => {
+        errors.profile = 'Profile not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
+  }
+);
+
 module.exports = router;
