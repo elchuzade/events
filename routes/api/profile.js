@@ -135,4 +135,16 @@ router.get(
   }
 );
 
+// @route GET api/profile/:id
+// @desc Get organizer profile by id
+router.get('/:id', (req, res) => {
+  Profile.findById(req.params.id)
+    .then(profile => res.status(201).json(profile))
+    .catch(err => {
+      errors.profile = 'Profile not found';
+      console.log(err);
+      return res.status(404).json(errors);
+    });
+});
+
 module.exports = router;
