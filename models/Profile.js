@@ -66,73 +66,15 @@ const ProfileSchema = new Schema(
     },
     pastEvents: [
       {
-        id: {
+        event: {
           type: String
-        },
-        title: {
-          type: String
-        },
-        category: {
-          type: String
-        },
-        avatar: {
-          location: {
-            type: String
-          },
-          key: {
-            type: String
-          },
-          bucket: {
-            type: String
-          },
-          originalname: {
-            type: String
-          },
-          mimetype: {
-            type: String
-          },
-          size: {
-            type: Number
-          },
-          fieldName: {
-            type: String
-          }
         }
       }
     ],
     futureEvents: [
       {
-        id: {
+        event: {
           type: String
-        },
-        title: {
-          type: String
-        },
-        category: {
-          type: String
-        },
-        avatar: {
-          location: {
-            type: String
-          },
-          key: {
-            type: String
-          },
-          bucket: {
-            type: String
-          },
-          originalname: {
-            type: String
-          },
-          mimetype: {
-            type: String
-          },
-          size: {
-            type: Number
-          },
-          fieldName: {
-            type: String
-          }
         }
       }
     ]

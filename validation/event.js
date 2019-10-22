@@ -7,7 +7,6 @@ module.exports = function validateProfile(data) {
 
   data.title = !isEmpty(data.title) ? data.title : '';
   data.category = !isEmpty(data.category) ? data.category : '';
-  data.id = !isEmpty(data.id) ? data.id : '';
 
   if (typeof data.title != 'string' || typeof data.category != 'string') {
     errors.input = 'Wrong input type';

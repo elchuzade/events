@@ -101,7 +101,7 @@ const EventSchema = new Schema(
     ],
     organizers: [
       {
-        id: {
+        profile: {
           type: String
         }
       }

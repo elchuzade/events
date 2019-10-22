@@ -31,7 +31,7 @@ router.post(
       .then(profile => {
         let organizers = [];
         organizers.push({
-          id: profile._id
+          profile: profile._id
         });
         const newEvent = {
           title: req.body.title,
@@ -41,7 +41,19 @@ router.post(
         };
         new Event(newEvent)
           .save()
-          .then(event => res.status(201).json(event))
+          .then(event => {
+            let futureEvents = profile.futureEvents;
+            futureEvents.push({ event: event._id });
+            profile.futureEvents = futureEvents;
+            profile
+              .save()
+              .then(profile => res.status(201).json(event))
+              .catch(err => {
+                errors.profile = 'Profile not saved';
+                console.log(err);
+                return res.status(400).json(errors);
+              });
+          })
           .catch(err => {
             errors.event = 'Event not saved';
             console.log(err);
