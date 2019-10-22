@@ -26,6 +26,7 @@ router.post(
     if (!isValid) return res.status(400).json(errors);
     Profile.findOne({ user: req.user.id })
       .then(profile => {
+        const oldProfile = profile;
         if (req.body.title) profile.title = req.body.title;
         if (req.body.intro) profile.intro = req.body.intro;
         if (req.body.city) profile.city = req.body.city;
@@ -36,14 +37,18 @@ router.post(
         if (req.body.instagram) profile.instagram = req.body.instagram;
         if (req.body.linkedin) profile.linkedin = req.body.linkedin;
         if (req.body.phone) profile.phone = req.body.phone;
-        profile
-          .save()
-          .then(profile => res.status(201).json(profile))
-          .catch(err => {
-            errors.profile = 'Profile can not be saved';
-            console.log(err);
-            return res.status(400).json(errors);
-          });
+        if (oldProfile === profile) {
+          return res.status(201).json(profile);
+        } else {
+          profile
+            .save()
+            .then(profile => res.status(201).json(profile))
+            .catch(err => {
+              errors.profile = 'Profile can not be saved';
+              console.log(err);
+              return res.status(400).json(errors);
+            });
+        }
       })
       .catch(err => {
         errors.profile = 'Profile not found';
@@ -52,3 +57,5 @@ router.post(
       });
   }
 );
+
+module.exports = router;

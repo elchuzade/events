@@ -29,22 +29,22 @@ module.exports = function validateProfile(data) {
   ) {
     errors.input = 'Wrong input type';
   }
-  if (!Validator.isEmail(data.email)) {
+  if (!isEmpty(data.email) && !Validator.isEmail(data.email)) {
     errors.email = 'Email is invalid';
   }
-  if (!Validator.isURL(data.facebook)) {
+  if (!isEmpty(data.email) && !Validator.isURL(data.facebook)) {
     errors.facebook = 'Facebook link is incorrect';
   }
-  if (!Validator.isURL(data.twitter)) {
+  if (!isEmpty(data.email) && !Validator.isURL(data.twitter)) {
     errors.twitter = 'Twitter link is incorrect';
   }
-  if (!Validator.isURL(data.instagram)) {
+  if (!isEmpty(data.email) && !Validator.isURL(data.instagram)) {
     errors.instagram = 'Instagram link is incorrect';
   }
-  if (!Validator.isURL(data.linkedin)) {
+  if (!isEmpty(data.email) && !Validator.isURL(data.linkedin)) {
     errors.linkedin = 'Linkedin link is incorrect';
   }
-  if (!Validator.isMobilePhone(data.phone)) {
+  if (!isEmpty(data.email) && !Validator.isMobilePhone(data.phone)) {
     errors.phone = 'Phone is incorrect';
   }
 
