@@ -9,6 +9,7 @@ const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
 
 const User = require('../../models/User');
+const Profile = require('../../models/Profile');
 
 // @route POST api/users/register
 // @desc Register user
@@ -30,20 +31,28 @@ router.post('/register', (req, res) => {
         password: req.body.password
       });
       bcrypt.genSalt(10, (err, salt) => {
-        bcrypt
-          .hash(newUser.password, salt, (err, hash) => {
-            if (err) throw err;
-            newUser.password = hash;
-            newUser
-              .save()
-              .then(user => res.status(201).json(user))
-              .catch(err => {
-                errors.bubble = 'Bubble can not be saved';
-                console.log(err);
-                return res.status(400).json(errors);
-              });
-          })
-          .catch(err => console.log(err));
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if (err) throw err;
+          newUser.password = hash;
+          newUser
+            .save()
+            .then(user => {
+              let profile = {
+                user: user,
+                name: user.name,
+                email: user.email
+              };
+              new Profile(profile)
+                .save()
+                .then(profile => res.status(201).json(user))
+                .catch(err => {
+                  errors.profile = 'Profile can not be saved';
+                  console.log(err);
+                  return res.status(400).json(errors);
+                });
+            })
+            .catch(err => console.log(err));
+        });
       });
     }
   });

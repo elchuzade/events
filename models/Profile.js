@@ -7,6 +7,9 @@ const ProfileSchema = new Schema(
     user: {
       type: String
     },
+    name: {
+      type: String
+    },
     avatar: {
       location: {
         type: String
