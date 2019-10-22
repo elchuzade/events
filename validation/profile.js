@@ -32,19 +32,19 @@ module.exports = function validateProfile(data) {
   if (!isEmpty(data.email) && !Validator.isEmail(data.email)) {
     errors.email = 'Email is invalid';
   }
-  if (!isEmpty(data.email) && !Validator.isURL(data.facebook)) {
+  if (!isEmpty(data.facebook) && !Validator.isURL(data.facebook)) {
     errors.facebook = 'Facebook link is incorrect';
   }
-  if (!isEmpty(data.email) && !Validator.isURL(data.twitter)) {
+  if (!isEmpty(data.twitter) && !Validator.isURL(data.twitter)) {
     errors.twitter = 'Twitter link is incorrect';
   }
-  if (!isEmpty(data.email) && !Validator.isURL(data.instagram)) {
+  if (!isEmpty(data.instagram) && !Validator.isURL(data.instagram)) {
     errors.instagram = 'Instagram link is incorrect';
   }
-  if (!isEmpty(data.email) && !Validator.isURL(data.linkedin)) {
+  if (!isEmpty(data.linkedin) && !Validator.isURL(data.linkedin)) {
     errors.linkedin = 'Linkedin link is incorrect';
   }
-  if (!isEmpty(data.email) && !Validator.isMobilePhone(data.phone)) {
+  if (!isEmpty(data.phone) && !Validator.isMobilePhone(data.phone)) {
     errors.phone = 'Phone is incorrect';
   }
 
