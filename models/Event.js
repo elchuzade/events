@@ -28,10 +28,12 @@ const EventSchema = new Schema(
       }
     },
     category: {
-      type: String
+      type: String,
+      required: true
     },
     title: {
-      type: String
+      type: String,
+      required: true
     },
     intro: {
       type: String
