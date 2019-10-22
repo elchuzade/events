@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const ProfileSchema = new Schema(
   {
     user: {
-      type: String
+      type: String,
+      required: true
     },
     name: {
       type: String
@@ -66,7 +67,7 @@ const ProfileSchema = new Schema(
     pastEvents: [
       {
         id: {
-          type: String,
+          type: String
         },
         title: {
           type: String
@@ -102,7 +103,7 @@ const ProfileSchema = new Schema(
     futureEvents: [
       {
         id: {
-          type: String,
+          type: String
         },
         title: {
           type: String

@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 // Create Schema
 const EventSchema = new Schema(
   {
+    user: {
+      type: String,
+      required: true
+    },
     avatar: {
       location: {
         type: String
@@ -28,10 +32,12 @@ const EventSchema = new Schema(
       }
     },
     category: {
-      type: String
+      type: String,
+      required: true
     },
     title: {
-      type: String
+      type: String,
+      required: true
     },
     intro: {
       type: String
@@ -95,37 +101,8 @@ const EventSchema = new Schema(
     ],
     organizers: [
       {
-        name: {
-          type: String
-        },
-        title: {
-          type: String
-        },
         id: {
           type: String
-        },
-        avatar: {
-          location: {
-            type: String
-          },
-          key: {
-            type: String
-          },
-          bucket: {
-            type: String
-          },
-          originalname: {
-            type: String
-          },
-          mimetype: {
-            type: String
-          },
-          size: {
-            type: Number
-          },
-          fieldName: {
-            type: String
-          }
         }
       }
     ],

@@ -42,7 +42,7 @@ router.post(
           .save()
           .then(profile => res.status(201).json(profile))
           .catch(err => {
-            errors.profile = 'Profile can not be saved';
+            errors.profile = 'Profile not saved';
             console.log(err);
             return res.status(400).json(errors);
           });
@@ -101,7 +101,7 @@ router.post(
             .then(profile => res.status(201).json(profile))
             .catch(err => {
               console.log(err);
-              errors.profile = 'Profile can not saved';
+              errors.profile = 'Profile not saved';
               return res.status(400).json(errors);
             });
         });
