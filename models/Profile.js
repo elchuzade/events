@@ -60,7 +60,7 @@ const ProfileSchema = new Schema(
     linkedin: {
       type: String
     },
-    whatsapp: {
+    phone: {
       type: String
     },
     pastEvents: [

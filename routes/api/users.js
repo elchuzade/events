@@ -38,7 +38,7 @@ router.post('/register', (req, res) => {
             .save()
             .then(user => {
               let profile = {
-                user: user,
+                user: user._id,
                 name: user.name,
                 email: user.email
               };
