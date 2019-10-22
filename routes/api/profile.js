@@ -28,7 +28,6 @@ router.post(
     if (!isValid) return res.status(400).json(errors);
     Profile.findOne({ user: req.user.id })
       .then(profile => {
-        const oldProfile = profile;
         if (req.body.title) profile.title = req.body.title;
         if (req.body.intro) profile.intro = req.body.intro;
         if (req.body.city) profile.city = req.body.city;
@@ -39,18 +38,14 @@ router.post(
         if (req.body.instagram) profile.instagram = req.body.instagram;
         if (req.body.linkedin) profile.linkedin = req.body.linkedin;
         if (req.body.phone) profile.phone = req.body.phone;
-        if (oldProfile === profile) {
-          return res.status(201).json(profile);
-        } else {
-          profile
-            .save()
-            .then(profile => res.status(201).json(profile))
-            .catch(err => {
-              errors.profile = 'Profile can not be saved';
-              console.log(err);
-              return res.status(400).json(errors);
-            });
-        }
+        profile
+          .save()
+          .then(profile => res.status(201).json(profile))
+          .catch(err => {
+            errors.profile = 'Profile can not be saved';
+            console.log(err);
+            return res.status(400).json(errors);
+          });
       })
       .catch(err => {
         errors.profile = 'Profile not found';
@@ -134,6 +129,29 @@ router.get(
       });
   }
 );
+
+// @route GET api/profile/all
+// @desc Get all organizer profiles
+router.get('/all', (req, res) => {
+  Profile.find()
+    .then(profiles => {
+      const allProfiles = profiles.map(profile => ({
+        _id: profile._id,
+        name: profile.name,
+        avatarLocation: profile.avatar.location,
+        title: profile.title,
+        city: profile.city,
+        country: profile.country,
+        pastEventsAmount: profile.pastEvents.length
+      }));
+      return res.status(201).json(allProfiles);
+    })
+    .catch(err => {
+      errors.profile = 'Profile not found';
+      console.log(err);
+      return res.status(404).json(errors);
+    });
+});
 
 // @route GET api/profile/:id
 // @desc Get organizer profile by id
