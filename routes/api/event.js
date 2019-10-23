@@ -12,6 +12,7 @@ const aws = require('aws-sdk');
 const config = require('../../config/keys');
 const upload = require('../files');
 const eventAvatar = upload.uploadEventAvatar.single('eventAvatar');
+const guestAvatar = upload.uploadGuestAvatar.single('guestAvatar');
 
 aws.config.update({
   secretAccessKey: config.secretAccessKey,
@@ -242,6 +243,76 @@ router.put(
             console.log(err);
             return res.status(400).json(errors);
           });
+      })
+      .catch(err => {
+        errors.event = 'Event not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
+  }
+);
+
+// @route POST api/event/id/guest/guestId/avatar
+// @desc Update event avatar
+router.post(
+  '/:id/guest/:guestId/avatar',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+    Event.findById(req.params.id)
+      .then(event => {
+        if (event.user !== req.user.id) {
+          errors.authorization = 'Not authorized';
+          return res.json(errors);
+        }
+        let guest = event.guests.find(guest => guest._id.toString() === req.params.guestId);
+        let params = {};
+        if (guest.avatar && guest.avatar.key) {
+          params = {
+            Bucket: guest.avatar.bucket,
+            Delete: {
+              Objects: [{ Key: guest.avatar.key }]
+            }
+          };
+        }
+        if (params.Delete && params.Delete.Objects.length > 0) {
+          s3.deleteObjects(params, (err, data) => {
+            if (err) console.log(err);
+          });
+        }
+        guestAvatar(req, res, err => {
+          if (err) {
+            console.log(err);
+            errors.uploadfail = 'Failed to upload an image';
+            return res.json(errors);
+          }
+          if (req.file == undefined) {
+            console.log(err);
+            errors.selectfail = 'No file selected';
+            return res.json(errors);
+          }
+          guest.avatar.location = req.file.location;
+          guest.avatar.key = req.file.key;
+          guest.avatar.bucket = req.file.bucket;
+          guest.avatar.originalname = req.file.originalname;
+          guest.avatar.mimetype = req.file.mimetype;
+          guest.avatar.size = req.file.size;
+          guest.avatar.fieldName = req.file.metadata.fieldName;
+          for (let i = 0; i < event.guests.length; i++){
+            if (event.guests[i]._id.toString() === guest._id) {
+              event.guests[i] = guest;
+              break;
+            }
+          }
+          event
+            .save()
+            .then(event => res.status(201).json(event))
+            .catch(err => {
+              console.log(err);
+              errors.event = 'Event not saved';
+              return res.status(400).json(errors);
+            });
+        });
       })
       .catch(err => {
         errors.event = 'Event not found';
