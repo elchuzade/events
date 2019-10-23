@@ -228,7 +228,7 @@ router.put(
           return res.status(401).json(errors);
         }
         for (let i = 0; i < event.guests.length; i++) {
-          if (event.guests[i]._id.toString() === req.params.guestId){
+          if (event.guests[i]._id.toString() === req.params.guestId) {
             if (req.body.name) event.guests[i].name = req.body.name;
             if (req.body.title) event.guests[i].title = req.body.title;
             if (req.body.intro) event.guests[i].intro = req.body.intro;
@@ -253,7 +253,7 @@ router.put(
 );
 
 // @route POST api/event/id/guest/guestId/avatar
-// @desc Update event avatar
+// @desc Update event guest avatar
 router.post(
   '/:id/guest/:guestId/avatar',
   passport.authenticate('jwt', { session: false }),
@@ -265,7 +265,9 @@ router.post(
           errors.authorization = 'Not authorized';
           return res.json(errors);
         }
-        let guest = event.guests.find(guest => guest._id.toString() === req.params.guestId);
+        let guest = event.guests.find(
+          guest => guest._id.toString() === req.params.guestId
+        );
         let params = {};
         if (guest.avatar && guest.avatar.key) {
           params = {
@@ -298,7 +300,7 @@ router.post(
           guest.avatar.mimetype = req.file.mimetype;
           guest.avatar.size = req.file.size;
           guest.avatar.fieldName = req.file.metadata.fieldName;
-          for (let i = 0; i < event.guests.length; i++){
+          for (let i = 0; i < event.guests.length; i++) {
             if (event.guests[i]._id.toString() === guest._id) {
               event.guests[i] = guest;
               break;
@@ -313,6 +315,55 @@ router.post(
               return res.status(400).json(errors);
             });
         });
+      })
+      .catch(err => {
+        errors.event = 'Event not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
+  }
+);
+
+// @route DELETE api/event/id/guest/guestId
+// @desc Delete event guest
+router.delete(
+  '/:id/guest/:guestId',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Event.findById(req.params.id)
+      .then(event => {
+        if (event.user !== req.user.id) {
+          errors.authorization = 'Not authorized';
+          return res.json(errors);
+        }
+        let guest = event.guests.find(
+          guest => guest._id.toString() === req.params.guestId
+        );
+        let params = {};
+        if (guest.avatar && guest.avatar.key) {
+          params = {
+            Bucket: guest.avatar.bucket,
+            Delete: {
+              Objects: [{ Key: guest.avatar.key }]
+            }
+          };
+        }
+        if (params.Delete && params.Delete.Objects.length > 0) {
+          s3.deleteObjects(params, (err, data) => {
+            if (err) console.log(err);
+          });
+        }
+        event.guests = event.guests.filter(
+          guest => guest._id.toString() != req.params.guestId
+        );
+        event
+          .save()
+          .then(event => res.status(201).json(event))
+          .catch(err => {
+            console.log(err);
+            errors.event = 'Event not saved';
+            return res.status(400).json(errors);
+          });
       })
       .catch(err => {
         errors.event = 'Event not found';
