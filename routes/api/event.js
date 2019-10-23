@@ -68,4 +68,67 @@ router.post(
   }
 );
 
+// @route POST api/event/id/avatar
+// @desc Update event avatar
+router.post(
+  '/:id/avatar',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+    Event.findById(req.params.id)
+      .then(event => {
+        if (event.user !== req.user.id) {
+          errors.authorization = 'Not authorized';
+          return res.json(errors);
+        }
+        let params = {};
+        if (event.avatar && event.avatar.key) {
+          params = {
+            Bucket: event.avatar.bucket,
+            Delete: {
+              Objects: [{ Key: event.avatar.key }]
+            }
+          };
+        }
+        if (params.Delete && params.Delete.Objects.length > 0) {
+          s3.deleteObjects(params, (err, data) => {
+            if (err) console.log(err);
+          });
+        }
+        eventAvatar(req, res, err => {
+          if (err) {
+            console.log(err);
+            errors.uploadfail = 'Failed to upload an image';
+            return res.json(errors);
+          }
+          if (req.file == undefined) {
+            console.log(err);
+            errors.selectfail = 'No file selected';
+            return res.json(errors);
+          }
+          event.avatar.location = req.file.location;
+          event.avatar.key = req.file.key;
+          event.avatar.bucket = req.file.bucket;
+          event.avatar.originalname = req.file.originalname;
+          event.avatar.mimetype = req.file.mimetype;
+          event.avatar.size = req.file.size;
+          event.avatar.fieldName = req.file.metadata.fieldName;
+          event
+            .save()
+            .then(event => res.status(201).json(event))
+            .catch(err => {
+              console.log(err);
+              errors.event = 'Event not saved';
+              return res.status(400).json(errors);
+            });
+        });
+      })
+      .catch(err => {
+        errors.event = 'Event not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
+  }
+);
+
 module.exports = router;
