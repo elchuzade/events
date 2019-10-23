@@ -5,6 +5,7 @@ const Event = require('../../models/Event');
 const Profile = require('../../models/Profile');
 const validateEvent = require('../../validation/event');
 const validateEventUpdate = require('../../validation/eventUpdate');
+const validateGuest = require('../../validation/guest');
 
 // AWS IMAGES
 const aws = require('aws-sdk');
@@ -165,6 +166,43 @@ router.post(
               return res.status(400).json(errors);
             });
         });
+      })
+      .catch(err => {
+        errors.event = 'Event not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
+  }
+);
+
+// @route POST api/event/id/guest
+// @desc Add event guest
+router.post(
+  '/:id/guest',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateGuest(req.body);
+    if (!isValid) return res.status(400).json(errors);
+    Event.findById(req.params.id)
+      .then(event => {
+        if (event.user !== req.user.id) {
+          errors.authorization = 'Not authorized';
+          return res.status(401).json(errors);
+        }
+        let guest = {
+          name: req.body.name,
+          title: req.body.title,
+          intro: req.body.intro
+        };
+        event.guests.push(guest);
+        event
+          .save()
+          .then(event => res.status(201).json(event))
+          .catch(err => {
+            errors.event = 'Event not saved';
+            console.log(err);
+            return res.status(400).json(errors);
+          });
       })
       .catch(err => {
         errors.event = 'Event not found';
