@@ -212,4 +212,43 @@ router.post(
   }
 );
 
+// @route PUT api/event/id/guest/guestId
+// @desc Add event guest
+router.put(
+  '/:id/guest/:guestId',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateGuest(req.body);
+    if (!isValid) return res.status(400).json(errors);
+    Event.findById(req.params.id)
+      .then(event => {
+        if (event.user !== req.user.id) {
+          errors.authorization = 'Not authorized';
+          return res.status(401).json(errors);
+        }
+        for (let i = 0; i < event.guests.length; i++) {
+          if (event.guests[i]._id.toString() === req.params.guestId){
+            if (req.body.name) event.guests[i].name = req.body.name;
+            if (req.body.title) event.guests[i].title = req.body.title;
+            if (req.body.intro) event.guests[i].intro = req.body.intro;
+            break;
+          }
+        }
+        event
+          .save()
+          .then(event => res.status(201).json(event))
+          .catch(err => {
+            errors.event = 'Event not saved';
+            console.log(err);
+            return res.status(400).json(errors);
+          });
+      })
+      .catch(err => {
+        errors.event = 'Event not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
+  }
+);
+
 module.exports = router;
