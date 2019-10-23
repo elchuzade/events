@@ -77,23 +77,26 @@ router.put(
   (req, res) => {
     const { errors, isValid } = validateEventUpdate(req.body);
     if (!isValid) return res.status(400).json(errors);
-    Profile.findOne({ user: req.user.id })
-      .then(profile => {
-        new Event(newEvent)
+    Event.findById(req.params.id)
+      .then(event => {
+        if (event.user !== req.user.id) {
+          errors.authorization = 'Not authorized';
+          return res.status(401).json(errors);
+        }
+        if (req.body.title) event.title = req.body.title;
+        if (req.body.category) event.category = req.body.category;
+        if (req.body.intro) event.intro = req.body.intro;
+        if (req.body.description) event.description = req.body.description;
+        if (req.body.location) event.location = req.body.location;
+        if (req.body.city) event.city = req.body.city;
+        if (req.body.country) event.country = req.body.country;
+        if (req.body.date) event.date = req.body.date;
+        if (req.body.time) event.time = req.body.time;
+        if (req.body.sits) event.sits = req.body.sits;
+        if (req.body.price) event.price = req.body.price;
+        event
           .save()
-          .then(event => {
-            let futureEvents = profile.futureEvents;
-            futureEvents.push({ event: event._id });
-            profile.futureEvents = futureEvents;
-            profile
-              .save()
-              .then(profile => res.status(201).json(event))
-              .catch(err => {
-                errors.profile = 'Profile not saved';
-                console.log(err);
-                return res.status(400).json(errors);
-              });
-          })
+          .then(event => res.status(201).json(event))
           .catch(err => {
             errors.event = 'Event not saved';
             console.log(err);
@@ -101,7 +104,7 @@ router.put(
           });
       })
       .catch(err => {
-        errors.profile = 'Profile not found';
+        errors.event = 'Event not found';
         console.log(err);
         return res.status(404).json(errors);
       });

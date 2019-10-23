@@ -15,20 +15,6 @@ module.exports = function validateProfile(data) {
   data.linkedin = !isEmpty(data.linkedin) ? data.linkedin : '';
   data.phone = !isEmpty(data.phone) ? data.phone : '';
 
-  if (
-    typeof data.title != 'string' ||
-    typeof data.intro != 'string' ||
-    typeof data.city != 'string' ||
-    typeof data.country != 'string' ||
-    typeof data.email != 'string' ||
-    typeof data.facebook != 'string' ||
-    typeof data.twitter != 'string' ||
-    typeof data.instagram != 'string' ||
-    typeof data.linkedin != 'string' ||
-    typeof data.phone != 'string'
-  ) {
-    errors.input = 'Wrong input type';
-  }
   if (!isEmpty(data.email) && !Validator.isEmail(data.email)) {
     errors.email = 'Email is invalid';
   }

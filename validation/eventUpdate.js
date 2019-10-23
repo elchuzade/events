@@ -1,8 +1,8 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
-const categoryList = require('./categoryList');
-const hourList = require('../common/hourList');
-const minuteList = require('../common/minuteList');
+const categoryList = require('./common/categoryList');
+const hourList = require('./common/hourList');
+const minuteList = require('./common/minuteList');
 
 module.exports = function validateProfile(data) {
   let errors = {};
@@ -21,20 +21,9 @@ module.exports = function validateProfile(data) {
   let minute = data.time.split(':')[1];
 
   if (
-    typeof data.title != 'string' ||
-    typeof data.category != 'string' ||
-    typeof data.intro != 'string' ||
-    typeof data.description != 'string' ||
-    typeof data.location != 'string' ||
-    typeof data.date != 'string' ||
-    typeof data.time != 'string' ||
-    typeof data.sits != 'number' ||
-    typeof data.price != 'number'
+    !isEmpty(data.time) &&
+    (hourList.indexOf(hour) == -1 || minuteList.indexOf(minute) == -1)
   ) {
-    errors.input = 'Wrong input type';
-  }
-
-  if (hourList.indexOf(hour) == -1 || minuteList.indexOf(minute) == -1) {
     errors.time = 'Time is invalid';
   }
   if (categoryList.indexOf(data.category) == -1) {
@@ -46,10 +35,10 @@ module.exports = function validateProfile(data) {
   if (Validator.isEmpty(data.title)) {
     errors.title = 'Title can not be empty';
   }
-  if (!Validator.isFloat(data.price.toString())) {
+  if (!isEmpty(data.price) && !Validator.isFloat(data.price.toString())) {
     errors.price = 'Price is incorrect';
   }
-  if (!Validator.isInt(data.sits.toString())) {
+  if (!isEmpty(data.sits) && !Validator.isInt(data.sits.toString())) {
     errors.sits = 'Sits is incorrect';
   }
   // add date control

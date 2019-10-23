@@ -1,16 +1,12 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
-const categoryList = require('../common/categoryList');
+const categoryList = require('./common/categoryList');
 
 module.exports = function validateProfile(data) {
   let errors = {};
 
   data.title = !isEmpty(data.title) ? data.title : '';
   data.category = !isEmpty(data.category) ? data.category : '';
-
-  if (typeof data.title != 'string' || typeof data.category != 'string') {
-    errors.input = 'Wrong input type';
-  }
 
   if (categoryList.indexOf(data.category) == -1) {
     errors.category = 'Category is invalid';
