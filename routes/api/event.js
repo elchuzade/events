@@ -4,6 +4,7 @@ const passport = require('passport');
 const Event = require('../../models/Event');
 const Profile = require('../../models/Profile');
 const validateEvent = require('../../validation/event');
+const validateEventUpdate = require('../../validation/eventUpdate');
 
 // AWS IMAGES
 const aws = require('aws-sdk');
@@ -39,6 +40,45 @@ router.post(
           user: req.user.id,
           organizers: organizers
         };
+        new Event(newEvent)
+          .save()
+          .then(event => {
+            let futureEvents = profile.futureEvents;
+            futureEvents.push({ event: event._id });
+            profile.futureEvents = futureEvents;
+            profile
+              .save()
+              .then(profile => res.status(201).json(event))
+              .catch(err => {
+                errors.profile = 'Profile not saved';
+                console.log(err);
+                return res.status(400).json(errors);
+              });
+          })
+          .catch(err => {
+            errors.event = 'Event not saved';
+            console.log(err);
+            return res.status(400).json(errors);
+          });
+      })
+      .catch(err => {
+        errors.profile = 'Profile not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
+  }
+);
+
+// @route POST api/event/id
+// @desc Update event
+router.put(
+  '/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateEventUpdate(req.body);
+    if (!isValid) return res.status(400).json(errors);
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
         new Event(newEvent)
           .save()
           .then(event => {

@@ -1,6 +1,6 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
-const categoryList = require('./categoryList');
+const categoryList = require('../common/categoryList');
 
 module.exports = function validateProfile(data) {
   let errors = {};
