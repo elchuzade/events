@@ -381,10 +381,10 @@ router.delete(
   }
 );
 
-// @route POST api/event/id/organizer
+// @route POST api/event/id/organizer/organizerId
 // @desc Add event organizer
 router.post(
-  '/:id/organizer',
+  '/:id/organizer/:organizerId',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const errors = {};
@@ -392,29 +392,96 @@ router.post(
       .then(event => {
         if (event.user !== req.user.id) {
           errors.authorization = 'Not authorized';
-          return res.json(errors);
+          return res.status(401).json(errors);
         }
         let organizer = event.organizers.find(
-          organizer => organizer.profile === req.body.profile
+          organizer => organizer.profile === req.params.organizerId
         );
         if (organizer) {
           errors.organizer = 'Organizer already exists';
-          return res.json(errors);
+          return res.status(400).json(errors);
         }
-        Profile.findById(req.body.profile)
+        Profile.findById(req.params.organizerId)
           .then(profile => {
             let futureEvent = profile.futureEvents.find(
               event => event.event === req.params.id
             );
             if (futureEvent) {
               errors.profile = 'Event already exists';
-              return res.json(errors);
+              return res.status(400).json(errors);
             }
             profile.futureEvents.push({ event: event._id });
             profile
               .save()
               .then(profile => {
-                event.organizers.push({ profile: req.body.profile });
+                event.organizers.push({ profile: req.params.organizerId });
+                event
+                  .save()
+                  .then(event => res.status(201).json(event))
+                  .catch(err => {
+                    console.log(err);
+                    errors.event = 'Event not saved';
+                    return res.status(400).json(errors);
+                  });
+              })
+              .catch(err => {
+                console.log(err);
+                errors.profile = 'Profile not saved';
+                return res.status(400).json(errors);
+              });
+          })
+          .catch(err => {
+            errors.profile = 'Profile not found';
+            console.log(err);
+            return res.status(404).json(errors);
+          });
+      })
+      .catch(err => {
+        errors.event = 'Event not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
+  }
+);
+
+// @route DELETE api/event/id/organizer/organizerId
+// @desc Remove event organizer
+router.delete(
+  '/:id/organizer/:organizerId',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+    Event.findById(req.params.id)
+      .then(event => {
+        if (event.user !== req.user.id) {
+          errors.authorization = 'Not authorized';
+          return res.status(401).json(errors);
+        }
+        let organizer = event.organizers.find(
+          organizer => organizer.profile === req.params.organizerId
+        );
+        if (!organizer) {
+          errors.organizer = 'Organizer not found';
+          return res.status(404).json(errors);
+        }
+        Profile.findById(req.params.organizerId)
+          .then(profile => {
+            let futureEvent = profile.futureEvents.find(
+              event => event.event === req.params.id
+            );
+            if (!futureEvent) {
+              errors.profile = 'Event not found';
+              return res.status(404).json(errors);
+            }
+            profile.futureEvents = profile.futureEvents.filter(
+              event => event.event != req.params.id
+            );
+            profile
+              .save()
+              .then(profile => {
+                event.organizers = event.organizers.filter(
+                  organizer => organizer.profile != req.params.organizerId
+                );
                 event
                   .save()
                   .then(event => res.status(201).json(event))
