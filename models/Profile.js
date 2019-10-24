@@ -75,6 +75,9 @@ const ProfileSchema = new Schema(
       {
         event: {
           type: String
+        },
+        status: {
+          type: String // accept, reject, pending
         }
       }
     ]

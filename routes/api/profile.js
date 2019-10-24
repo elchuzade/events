@@ -26,7 +26,7 @@ router.post(
   (req, res) => {
     const { errors, isValid } = validateProfile(req.body);
     if (!isValid) return res.status(400).json(errors);
-    Profile.findOne({ user: req.user.id })
+    Profile.findById(req.user.profile)
       .then(profile => {
         if (req.body.title) profile.title = req.body.title;
         if (req.body.intro) profile.intro = req.body.intro;
@@ -62,7 +62,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const errors = {};
-    Profile.findOne({ user: req.user.id })
+    Profile.findById(req.user.profile)
       .then(profile => {
         let params = {};
         if (profile.avatar && profile.avatar.key) {
@@ -120,7 +120,7 @@ router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Profile.findOne({ user: req.user.id })
+    Profile.findById(req.user.profile)
       .then(profile => res.status(201).json(profile))
       .catch(err => {
         errors.profile = 'Profile not found';

@@ -30,7 +30,7 @@ router.post(
   (req, res) => {
     const { errors, isValid } = validateEvent(req.body);
     if (!isValid) return res.status(400).json(errors);
-    Profile.findOne({ user: req.user.id })
+    Profile.findById(req.user.profile)
       .then(profile => {
         let organizers = [];
         organizers.push({
@@ -382,39 +382,31 @@ router.delete(
 );
 
 // @route POST api/event/id/organizer/organizerId
-// @desc Add event organizer
+// @desc Add request to become event organizer
 router.post(
-  '/:id/organizer/:organizerId',
+  '/:id/organizer',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const errors = {};
-    Event.findById(req.params.id)
-      .then(event => {
-        if (event.user !== req.user.id) {
-          errors.authorization = 'Not authorized';
-          return res.status(401).json(errors);
-        }
-        let organizer = event.organizers.find(
-          organizer => organizer.profile === req.params.organizerId
-        );
-        if (organizer) {
-          errors.organizer = 'Organizer already exists';
-          return res.status(400).json(errors);
-        }
-        Profile.findById(req.params.organizerId)
-          .then(profile => {
-            let futureEvent = profile.futureEvents.find(
-              event => event.event === req.params.id
+    Profile.findById(req.user.profile)
+      .then(profile => {
+        Event.finById(req.params.id)
+          .then(event => {
+            let organizer = event.organizers.find(
+              organizer => organizer.profile === req.user.profile
             );
-            if (futureEvent) {
-              errors.profile = 'Event already exists';
+            if (organizer) {
+              errors.organizer = 'Organizer already exists';
               return res.status(400).json(errors);
             }
-            profile.futureEvents.push({ event: event._id });
+            profile.futureEvents.push({ event: event._id, status: 'pending' });
             profile
               .save()
               .then(profile => {
-                event.organizers.push({ profile: req.params.organizerId });
+                event.organizers.push({
+                  profile: req.params.organizerId,
+                  status: 'pending'
+                });
                 event
                   .save()
                   .then(event => res.status(201).json(event))
@@ -431,13 +423,13 @@ router.post(
               });
           })
           .catch(err => {
-            errors.profile = 'Profile not found';
+            errors.event = 'Event not found';
             console.log(err);
             return res.status(404).json(errors);
           });
       })
       .catch(err => {
-        errors.event = 'Event not found';
+        errors.profile = 'Profile not found';
         console.log(err);
         return res.status(404).json(errors);
       });
@@ -456,6 +448,10 @@ router.delete(
         if (event.user !== req.user.id) {
           errors.authorization = 'Not authorized';
           return res.status(401).json(errors);
+        }
+        if (event.organizers.length <= 1) {
+          errors.event = 'Event must have at least one organizer';
+          return res.status(400).json(errors);
         }
         let organizer = event.organizers.find(
           organizer => organizer.profile === req.params.organizerId

@@ -103,6 +103,9 @@ const EventSchema = new Schema(
       {
         profile: {
           type: String
+        },
+        status: {
+          type: String // accept, reject, pending
         }
       }
     ],
