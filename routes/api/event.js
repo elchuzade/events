@@ -585,4 +585,16 @@ router.get('/', (req, res) => {
     });
 });
 
+// @route GET api/event/id
+// @desc Get all events
+router.get('/:id', (req, res) => {
+  Event.findById(req.params.id)
+    .then(event => res.status(201).json(event))
+    .catch(err => {
+      errors.event = 'Event not found';
+      console.log(err);
+      return res.status(404).json(errors);
+    });
+});
+
 module.exports = router;
