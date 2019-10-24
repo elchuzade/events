@@ -6,6 +6,7 @@ const Profile = require('../../models/Profile');
 const validateEvent = require('../../validation/event');
 const validateEventUpdate = require('../../validation/eventUpdate');
 const validateGuest = require('../../validation/guest');
+const validateStatus = require('../../validation/status');
 
 // AWS IMAGES
 const aws = require('aws-sdk');
@@ -381,7 +382,7 @@ router.delete(
   }
 );
 
-// @route POST api/event/id/organizer/organizerId
+// @route POST api/event/id/organizer/
 // @desc Add request to become event organizer
 router.post(
   '/:id/organizer',
@@ -407,6 +408,66 @@ router.post(
                   profile: req.params.organizerId,
                   status: 'pending'
                 });
+                event
+                  .save()
+                  .then(event => res.status(201).json(event))
+                  .catch(err => {
+                    console.log(err);
+                    errors.event = 'Event not saved';
+                    return res.status(400).json(errors);
+                  });
+              })
+              .catch(err => {
+                console.log(err);
+                errors.profile = 'Profile not saved';
+                return res.status(400).json(errors);
+              });
+          })
+          .catch(err => {
+            errors.event = 'Event not found';
+            console.log(err);
+            return res.status(404).json(errors);
+          });
+      })
+      .catch(err => {
+        errors.profile = 'Profile not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
+  }
+);
+
+// @route POST api/event/id/organizer/organizerId
+// @desc Accept request to become event organizer
+router.post(
+  '/:id/organizer/:organizerId',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateStatus(req.body);
+    if (!isValid) return res.status(400).json(errors);
+    Profile.findById(req.params.organizerId)
+      .then(profile => {
+        Event.findById(req.params.id)
+          .then(event => {
+            for (let i = 0; i < profile.futureEvents.length; i++) {
+              if (
+                profile.futureEvents[i].event === req.params.id &&
+                profile.futureEvents[i].status === 'pending'
+              ) {
+                profile.futureEvents[i].status = req.body.status;
+              }
+            }
+            for (let i = 0; i < event.organizers.length; i++) {
+              if (
+                event.organizers[i].profile === req.params.organizerId &&
+                event.organizers[i].status === 'pending'
+              ) {
+                event.organizers[i].status = req.body.status;
+              }
+            }
+            profile
+              .save()
+              .then(profile => {
                 event
                   .save()
                   .then(event => res.status(201).json(event))
