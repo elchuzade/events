@@ -105,7 +105,7 @@ const EventSchema = new Schema(
           type: String
         },
         status: {
-          type: String // accept, reject, pending
+          type: String
         }
       }
     ],

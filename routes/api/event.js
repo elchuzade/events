@@ -31,11 +31,12 @@ router.post(
   (req, res) => {
     const { errors, isValid } = validateEvent(req.body);
     if (!isValid) return res.status(400).json(errors);
-    Profile.findById(req.user.profile)
+    Profile.findOne({ user: req.user.id })
       .then(profile => {
         let organizers = [];
         organizers.push({
-          profile: profile._id
+          profile: profile._id,
+          status: 'admin'
         });
         const newEvent = {
           title: req.body.title,
@@ -389,12 +390,12 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const errors = {};
-    Profile.findById(req.user.profile)
+    Profile.findOne({ user: req.user.id })
       .then(profile => {
         Event.finById(req.params.id)
           .then(event => {
             let organizer = event.organizers.find(
-              organizer => organizer.profile === req.user.profile
+              organizer => organizer.profile === profile._id
             );
             if (organizer) {
               errors.organizer = 'Organizer already exists';
@@ -449,6 +450,10 @@ router.post(
       .then(profile => {
         Event.findById(req.params.id)
           .then(event => {
+            if (event.user !== req.user.id) {
+              errors.authorization = 'Not authorized';
+              return res.status(401).json(errors);
+            }
             for (let i = 0; i < profile.futureEvents.length; i++) {
               if (
                 profile.futureEvents[i].event === req.params.id &&
@@ -567,5 +572,17 @@ router.delete(
       });
   }
 );
+
+// @route GET api/event
+// @desc Get all events
+router.get('/', (req, res) => {
+  Event.find()
+    .then(events => res.status(201).json(events))
+    .catch(err => {
+      errors.events = 'Events not found';
+      console.log(err);
+      return res.status(404).json(errors);
+    });
+});
 
 module.exports = router;

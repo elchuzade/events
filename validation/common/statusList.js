@@ -1,3 +1,3 @@
-const statusList = ['accept', 'reject', 'pending'];
+const statusList = ['accept', 'reject', 'pending', 'admin'];
 
 module.exports = statusList;
