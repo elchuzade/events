@@ -582,6 +582,70 @@ router.delete(
   }
 );
 
+// @route POST api/event/id/sponsor/
+// @desc Add request to become event sponsor
+router.post(
+  '/:id/sponsor',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        Event.findById(req.params.id)
+          .then(event => {
+            let sponsor = event.sponsors.find(
+              sponsor => sponsor.profile === profile._id.toString()
+            );
+            if (sponsor) {
+              if (sponsor.status === 'pending') {
+                errors.sponsor = 'Sponsor request has already been sent';
+              } else {
+                errors.sponsor = 'Sponsor already exists';
+              }
+              return res.status(400).json(errors);
+            }
+            profile.futureEvents.push({
+              event: event._id,
+              message: req.body.message,
+              status: 'pending'
+            });
+            profile
+              .save()
+              .then(profile => {
+                event.sponsors.push({
+                  profile: profile._id,
+                  message: req.body.message,
+                  status: 'pending'
+                });
+                event
+                  .save()
+                  .then(event => res.status(201).json(event))
+                  .catch(err => {
+                    console.log(err);
+                    errors.event = 'Event not saved';
+                    return res.status(400).json(errors);
+                  });
+              })
+              .catch(err => {
+                console.log(err);
+                errors.profile = 'Profile not saved';
+                return res.status(400).json(errors);
+              });
+          })
+          .catch(err => {
+            errors.event = 'Event not found';
+            console.log(err);
+            return res.status(404).json(errors);
+          });
+      })
+      .catch(err => {
+        errors.profile = 'Profile not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
+  }
+);
+
 // @route GET api/event
 // @desc Get all events
 router.get('/', (req, res) => {
