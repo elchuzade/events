@@ -48,7 +48,7 @@ router.post(
           .save()
           .then(event => {
             let futureEvents = profile.futureEvents;
-            futureEvents.push({ event: event._id });
+            futureEvents.push({ event: event._id, status: 'admin' });
             profile.futureEvents = futureEvents;
             profile
               .save()
@@ -392,13 +392,17 @@ router.post(
     const errors = {};
     Profile.findOne({ user: req.user.id })
       .then(profile => {
-        Event.finById(req.params.id)
+        Event.findById(req.params.id)
           .then(event => {
             let organizer = event.organizers.find(
-              organizer => organizer.profile === profile._id
+              organizer => organizer.profile === profile._id.toString()
             );
             if (organizer) {
-              errors.organizer = 'Organizer already exists';
+              if (organizer.status === 'pending') {
+                errors.organizer = 'Organizer request has already been sent';
+              } else {
+                errors.organizer = 'Organizer already exists';
+              }
               return res.status(400).json(errors);
             }
             profile.futureEvents.push({ event: event._id, status: 'pending' });
@@ -406,7 +410,7 @@ router.post(
               .save()
               .then(profile => {
                 event.organizers.push({
-                  profile: req.params.organizerId,
+                  profile: profile._id,
                   status: 'pending'
                 });
                 event
