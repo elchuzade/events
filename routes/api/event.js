@@ -405,12 +405,17 @@ router.post(
               }
               return res.status(400).json(errors);
             }
-            profile.futureEvents.push({ event: event._id, status: 'pending' });
+            profile.futureEvents.push({
+              event: event._id,
+              message: req.body.message,
+              status: 'pending'
+            });
             profile
               .save()
               .then(profile => {
                 event.organizers.push({
                   profile: profile._id,
+                  message: req.body.message,
                   status: 'pending'
                 });
                 event
