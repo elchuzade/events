@@ -609,6 +609,30 @@ router.post(
   (req, res) => {
     const { errors, isValid } = validateSponsorship(req.body);
     if (!isValid) return res.status(400).json(errors);
+    Event.findById(req.params.id)
+      .then(event => {
+        if (event.user !== req.user.id) {
+          errors.authorization = 'Not authorized';
+          return res.status(401).json(errors);
+        }
+        event.sponsorships.push({
+          title: req.body.title,
+          features: req.body.features
+        });
+        event
+          .save()
+          .then(event => res.status(201).json(event))
+          .catch(err => {
+            console.log(err);
+            errors.event = 'Event not saved';
+            return res.status(400).json(errors);
+          });
+      })
+      .catch(err => {
+        errors.event = 'Event not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
   }
 );
 
