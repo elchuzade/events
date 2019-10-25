@@ -63,7 +63,20 @@ const SponsorSchema = new Schema(
     },
     phone: {
       type: String
-    }
+    },
+    offers: [
+      {
+        name: {
+          type: String
+        },
+        amount: {
+          type: Number
+        },
+        info: {
+          type: String
+        }
+      }
+    ]
   },
   { timestamps: true }
 );

@@ -42,14 +42,12 @@ router.post('/register', (req, res) => {
                 name: user.name,
                 email: user.email
               };
-              new Profile(profile)
-                .save()
-                .then(profile => res.status(201).json(user))
-                .catch(err => {
-                  errors.profile = 'Profile can not be saved';
-                  console.log(err);
-                  return res.status(400).json(errors);
-                });
+              if (req.body.type === 'organizer') {
+                new Profile(profile).save();
+              } else {
+                new Sponsor(profile).save();
+              }
+              return res.status(201).json(user);
             })
             .catch(err => console.log(err));
         });
