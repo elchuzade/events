@@ -601,4 +601,15 @@ router.get('/:id', (req, res) => {
     });
 });
 
+// @route POST api/event/id/sponsorship
+// @desc Add new sponsorship package
+router.post(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateSponsorship(req.body);
+    if (!isValid) return res.status(400).json(errors);
+  }
+);
+
 module.exports = router;
