@@ -104,6 +104,22 @@ const EventSchema = new Schema(
         profile: {
           type: String
         },
+        message: {
+          type: String
+        },
+        status: {
+          type: String
+        }
+      }
+    ],
+    sponsors: [
+      {
+        profile: {
+          type: String
+        },
+        message: {
+          type: String
+        },
         status: {
           type: String
         }

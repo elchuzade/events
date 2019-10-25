@@ -76,6 +76,19 @@ const SponsorSchema = new Schema(
           type: String
         }
       }
+    ],
+    sponsorships: [
+      {
+        event: {
+          type: String
+        },
+        message: {
+          type: String
+        },
+        status: {
+          type: String
+        }
+      }
     ]
   },
   { timestamps: true }

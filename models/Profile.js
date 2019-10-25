@@ -68,12 +68,21 @@ const ProfileSchema = new Schema(
       {
         event: {
           type: String
+        },
+        message: {
+          type: String
+        },
+        status: {
+          type: String
         }
       }
     ],
     futureEvents: [
       {
         event: {
+          type: String
+        },
+        message: {
           type: String
         },
         status: {
