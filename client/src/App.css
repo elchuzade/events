@@ -17,6 +17,22 @@
   color: white;
 }
 
+.accountTypePassive {
+  color: grey;
+  border: 1px solid transparent;
+  border-radius: 20px;
+}
+
+.accountTypeActive {
+  color: green;
+  border: 1px solid green;
+  border-radius: 20px;
+}
+
+.form-rounded, .btn-rounded {
+  border-radius: 19px;
+}
+
 .App-link {
   color: #09d3ac;
 }

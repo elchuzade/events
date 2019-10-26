@@ -8,10 +8,10 @@ import { setCurrentUser, logoutUser } from './actions/authActions';
 import { Provider } from 'react-redux';
 import store from './store';
 
-// import Navbar from './components/layout/Navbar';
+import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
-// import Login from './components/auth/Login';
-// import Register from './components/auth/Register';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
 import NotFound from './components/layout/NotFound';
 
 // Check for token
@@ -37,7 +37,10 @@ const App = () => {
     <Provider store={store}>
       <div className="App">
         <Router>
+          <Navbar />
           <Switch>
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/login" component={Login} />
             <Route path="*" component={NotFound} />
           </Switch>
           <Footer />

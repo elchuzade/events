@@ -4,20 +4,22 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/authActions';
 import TextInput from '../common/TextInput';
+import Helmet from 'react-helmet';
+import Switch from 'react-switch';
+import classnames from 'classnames';
 
 class Register extends Component {
   constructor() {
     super();
     this.state = {
+      type: '',
       name: '',
       email: '',
       password: '',
       password2: '',
-      errors: {}
+      errors: {},
+      checked: false
     };
-
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -26,17 +28,21 @@ class Register extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps = nextProps => {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
-  }
+  };
 
-  onChange(e) {
+  handleChange = checked => {
+    this.setState({ checked });
+  };
+
+  onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
-  }
+  };
 
-  onSubmit(e) {
+  onSubmit = e => {
     e.preventDefault();
     const newUser = {
       name: this.state.name,
@@ -46,20 +52,25 @@ class Register extends Component {
     };
 
     this.props.registerUser(newUser, this.props.history);
-  }
+  };
 
   render() {
     const { errors } = this.state;
     return (
       <section id="register">
-        <div className="container">
-          <div className="row mt-5">
+        <Helmet>
+          <style>
+            {'footer { position: absolute; width: 100%; bottom: 0; }'}
+          </style>
+        </Helmet>
+        <div className="container pt-5">
+          <div className="row mt-5 pt-5">
             <div className="col-md-6 mx-auto">
               <div className="card">
                 <div className="card-header p-0">
                   <div className="row text-center text-white mx-0">
                     <div className="col-6 bg-light p-0">
-                      <Link to="/boss/login" style={{ textDecoration: 'none' }}>
+                      <Link to="/login" style={{ textDecoration: 'none' }}>
                         <p id="signInLink" className="py-1 lead m-0 text-muted">
                           <i>Sign In</i>
                         </p>
@@ -73,10 +84,36 @@ class Register extends Component {
                   </div>
                 </div>
                 <div className="card-body">
+                  <div className="my-1 row align-items-center pb-3">
+                    <span
+                      className={classnames('mx-4 col h4 my-0 py-1 accountTypePassive', {
+                        accountTypeActive: !this.state.checked
+                      })}
+                    >
+                      ORGANIZER
+                    </span>
+                    <Switch
+                      onColor={'#DDD'}
+                      offColor={'#DDD'}
+                      offHandleColor={"#080"}
+                      onHandleColor={"#080"}
+                      checkedIcon={false}
+                      uncheckedIcon={false}
+                      width={100}
+                      onChange={this.handleChange}
+                      checked={this.state.checked}
+                    />
+                    <span
+                      className={classnames('mx-4 col h4 my-0 py-1 accountTypePassive', {
+                        accountTypeActive: this.state.checked
+                      })}
+                    >
+                      SPONSOR
+                    </span>
+                  </div>
                   <form noValidate onSubmit={this.onSubmit}>
                     <div className="form-group">
                       <TextInput
-                        label="Name"
                         name="name"
                         placeholder="full name"
                         value={this.state.name}
@@ -86,7 +123,6 @@ class Register extends Component {
                     </div>
                     <div className="form-group">
                       <TextInput
-                        label="Email"
                         name="email"
                         type="email"
                         placeholder="email"
@@ -97,7 +133,6 @@ class Register extends Component {
                     </div>
                     <div className="form-group">
                       <TextInput
-                        label="Password"
                         name="password"
                         type="password"
                         placeholder="password"
@@ -108,7 +143,6 @@ class Register extends Component {
                     </div>
                     <div className="form-group">
                       <TextInput
-                        label="Confirm Password"
                         name="password2"
                         type="password"
                         placeholder="confirm password"
@@ -119,7 +153,7 @@ class Register extends Component {
                     </div>
                     <button
                       type="submit"
-                      className="btn btn-secondary btn-block"
+                      className="btn btn-secondary btn-block btn-rounded"
                     >
                       Sign Up
                     </button>

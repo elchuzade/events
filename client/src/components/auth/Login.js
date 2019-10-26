@@ -14,9 +14,6 @@ class Login extends Component {
       password: '',
       errors: {}
     };
-
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -34,28 +31,30 @@ class Login extends Component {
     }
   }
 
-  onChange(e) {
+  onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
-  }
+  };
 
-  onSubmit(e) {
+  onSubmit = e => {
     e.preventDefault();
     const userData = {
       email: this.state.email,
       password: this.state.password
     };
     this.props.loginUser(userData);
-  }
+  };
 
   render() {
     const { errors } = this.state;
     return (
       <section id="login">
         <Helmet>
-          <style>{'footer { position: absolute; width: 100%; bottom: 0; }'}</style>
+          <style>
+            {'footer { position: absolute; width: 100%; bottom: 0; }'}
+          </style>
         </Helmet>
-        <div className="container">
-          <div className="row mt-5">
+        <div className="container pt-5">
+          <div className="row mt-5 pt-5">
             <div className="col-md-6 mx-auto">
               <div className="card">
                 <div className="card-header p-0">
@@ -66,10 +65,7 @@ class Login extends Component {
                       </p>
                     </div>
                     <div className="col-6 bg-light p-0">
-                      <Link
-                        to="/boss/register"
-                        style={{ textDecoration: 'none' }}
-                      >
+                      <Link to="/register" style={{ textDecoration: 'none' }}>
                         <p id="signUpLink" className="py-1 lead m-0 text-muted">
                           <i>Sign Up</i>
                         </p>
@@ -81,7 +77,6 @@ class Login extends Component {
                   <form onSubmit={this.onSubmit}>
                     <div className="form-group">
                       <TextInput
-                        label="Email"
                         name="email"
                         type="email"
                         placeholder="email"
@@ -92,7 +87,6 @@ class Login extends Component {
                     </div>
                     <div className="form-group">
                       <TextInput
-                        label="Password"
                         name="password"
                         type="password"
                         placeholder="password"
@@ -103,7 +97,7 @@ class Login extends Component {
                     </div>
                     <button
                       type="submit"
-                      className="btn btn-secondary btn-block"
+                      className="btn btn-secondary btn-block btn-rounded"
                     >
                       Sign In
                     </button>

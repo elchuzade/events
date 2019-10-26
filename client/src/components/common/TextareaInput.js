@@ -18,7 +18,7 @@ const TextareaInput = ({
     <div>
       {label && <label htmlFor={name}>{label}</label>}
       <textarea
-        className={classnames(`form-control ${extraClass}`, {
+        className={classnames(`form-control form-rounded ${extraClass}`, {
           'is-invalid': error
         })}
         placeholder={placeholder}
