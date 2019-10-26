@@ -28,7 +28,8 @@ router.post('/register', (req, res) => {
       const newUser = new User({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        type: req.body.type
       });
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -40,7 +41,8 @@ router.post('/register', (req, res) => {
               let profile = {
                 user: user._id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                type: req.body.type
               };
               if (req.body.type === 'organizer') {
                 new Profile(profile).save();

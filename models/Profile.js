@@ -4,6 +4,9 @@ const Schema = mongoose.Schema;
 // Create Schema
 const ProfileSchema = new Schema(
   {
+    type: {
+      type: String
+    },
     user: {
       type: String,
       required: true

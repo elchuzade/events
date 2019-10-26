@@ -33,6 +33,10 @@ router.post(
     if (!isValid) return res.status(400).json(errors);
     Profile.findOne({ user: req.user.id })
       .then(profile => {
+        if (profile.type !== "organizer") {
+          errors.profile = "You must have an organizer account";
+          return res.status(400).json(errors);
+        }
         let organizers = [];
         organizers.push({
           profile: profile._id,
@@ -392,6 +396,10 @@ router.post(
     const errors = {};
     Profile.findOne({ user: req.user.id })
       .then(profile => {
+        if (profile.type !== "organizer") {
+          errors.profile = "You must have an organizer account";
+          return res.status(400).json(errors);
+        }
         Event.findById(req.params.id)
           .then(event => {
             let organizer = event.organizers.find(
@@ -591,6 +599,10 @@ router.post(
     const errors = {};
     Profile.findOne({ user: req.user.id })
       .then(profile => {
+        if (profile.type !== "sponsor") {
+          errors.profile = "You must have a sponsor account";
+          return res.status(400).json(errors);
+        }
         Event.findById(req.params.id)
           .then(event => {
             let sponsor = event.sponsors.find(
@@ -617,6 +629,70 @@ router.post(
                   message: req.body.message,
                   status: 'pending'
                 });
+                event
+                  .save()
+                  .then(event => res.status(201).json(event))
+                  .catch(err => {
+                    console.log(err);
+                    errors.event = 'Event not saved';
+                    return res.status(400).json(errors);
+                  });
+              })
+              .catch(err => {
+                console.log(err);
+                errors.profile = 'Profile not saved';
+                return res.status(400).json(errors);
+              });
+          })
+          .catch(err => {
+            errors.event = 'Event not found';
+            console.log(err);
+            return res.status(404).json(errors);
+          });
+      })
+      .catch(err => {
+        errors.profile = 'Profile not found';
+        console.log(err);
+        return res.status(404).json(errors);
+      });
+  }
+);
+
+// @route POST api/event/id/sponsor/sponsorId
+// @desc Accept request to become event sponsor
+router.post(
+  '/:id/sponsor/:sponsorId',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateStatus(req.body);
+    if (!isValid) return res.status(400).json(errors);
+    Profile.findById(req.params.sponsorId)
+      .then(profile => {
+        Event.findById(req.params.id)
+          .then(event => {
+            if (event.user !== req.user.id) {
+              errors.authorization = 'Not authorized';
+              return res.status(401).json(errors);
+            }
+            for (let i = 0; i < profile.futureEvents.length; i++) {
+              if (
+                profile.futureEvents[i].event === req.params.id &&
+                profile.futureEvents[i].status === 'pending'
+              ) {
+                profile.futureEvents[i].status = req.body.status;
+              }
+            }
+            for (let i = 0; i < event.sponsors.length; i++) {
+              if (
+                event.sponsors[i].profile === req.params.sponsorId &&
+                event.sponsors[i].status === 'pending'
+              ) {
+                event.sponsors[i].status = req.body.status;
+              }
+            }
+            profile
+              .save()
+              .then(profile => {
                 event
                   .save()
                   .then(event => res.status(201).json(event))
