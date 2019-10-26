@@ -7,45 +7,35 @@ import classnames from 'classnames';
 class Footer extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      dark: false
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.theme) {
-      this.setState({ dark: nextProps.theme.dark });
-    }
+    this.state = {};
   }
 
   render() {
     return (
-      <footer
-        className={classnames('mt-5 py-4', {
-          'bg-dark text-white': this.state.dark,
-          'bg-light text-black': !this.state.dark
-        })}
-      >
+      <footer>
         <div className="container">
           <div className="row">
             <div className="col-4">
-              <span className="align-middle">Personal Blog</span>
+              <span className="align-middle">Events, Organizers, Sponsors</span>
             </div>
             <div className="col-8 text-right">
-              <Link to="/" className="mx-2 align-middle">
-                Blog
+              <Link to="/events" className="mx-2 align-middle">
+                Events
               </Link>
-              <Link to="/contacts" className="mx-2 align-middle">
-                Contacts
+              <Link to="/organizers" className="mx-2 align-middle">
+                Organizers
+              </Link>
+              <Link to="/sponsors" className="mx-2 align-middle">
+                Sponsors
               </Link>
               <span className="mx-2 align-middle">
-                <a target="__blank" href="https://github.com/elchuzade">
-                  <i className="fab fa-github fa-2x"></i>
+                <a target="__blank" href="https://facebook.com/">
+                  <i className="fab fa-facebook fa-2x"></i>
                 </a>
               </span>
               <span className="mx-2">
-                <a target="__blank" href="https://linkedin.com/in/elchuzade">
-                  <i className="fab fa-linkedin fa-2x align-middle"></i>
+                <a target="__blank" href="https://instagram.com/">
+                  <i className="fab fa-instagram fa-2x align-middle"></i>
                 </a>
               </span>
             </div>
@@ -53,7 +43,7 @@ class Footer extends Component {
           <div className="row">
             <div className="col-12 text-center">
               <span>
-                Copyright © {new Date().getFullYear()} Kamran Elchuzade. All
+                Copyright © {new Date().getFullYear()} Eventador. All
                 rights reserved.
               </span>
             </div>
@@ -64,9 +54,7 @@ class Footer extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  theme: state.theme
-});
+const mapStateToProps = state => ({});
 
 export default connect(
   mapStateToProps,

@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/authActions';
 import Switch from 'react-switch';
 import classnames from 'classnames';
-import { changeTheme } from '../../actions/commonActions';
 import Helmet from 'react-helmet';
 
 class Navbar extends Component {
@@ -158,8 +157,7 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
   logoutUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-  changeTheme: PropTypes.func.isRequired
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -168,5 +166,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { logoutUser, changeTheme }
+  { logoutUser }
 )(withRouter(Navbar));
