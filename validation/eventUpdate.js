@@ -3,6 +3,7 @@ const isEmpty = require('./is-empty');
 const categoryList = require('./common/categoryList');
 const hourList = require('./common/hourList');
 const minuteList = require('./common/minuteList');
+const currencyList = require('./common/currencyList');
 
 module.exports = function validateProfile(data) {
   let errors = {};
@@ -16,6 +17,7 @@ module.exports = function validateProfile(data) {
   data.time = !isEmpty(data.time) ? data.time : '';
   data.sits = !isEmpty(data.sits) ? data.sits : '';
   data.price = !isEmpty(data.price) ? data.price : '';
+  data.currency = !isEmpty(data.currency) ? data.currency : '';
   // time - 14:55, 23:05, 00:00
   let hour = data.time.split(':')[0];
   let minute = data.time.split(':')[1];
@@ -25,6 +27,9 @@ module.exports = function validateProfile(data) {
     (hourList.indexOf(hour) == -1 || minuteList.indexOf(minute) == -1)
   ) {
     errors.time = 'Time is invalid';
+  }
+  if (!isEmpty(data.currency) && currencyList.indexOf(data.currency) == -1) {
+    errors.currency = 'Currency is invalid';
   }
   if (categoryList.indexOf(data.category) == -1) {
     errors.category = 'Category is invalid';

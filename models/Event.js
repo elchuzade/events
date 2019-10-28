@@ -48,6 +48,12 @@ const EventSchema = new Schema(
     location: {
       type: String
     },
+    city: {
+      type: String
+    },
+    country: {
+      type: String
+    },
     date: {
       type: Date
     },

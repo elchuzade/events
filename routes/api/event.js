@@ -102,6 +102,7 @@ router.put(
         if (req.body.time) event.time = req.body.time;
         if (req.body.sits) event.sits = req.body.sits;
         if (req.body.price) event.price = req.body.price;
+        if (req.body.currency) event.currency = req.body.currency;
         event
           .save()
           .then(event => res.status(201).json(event))
