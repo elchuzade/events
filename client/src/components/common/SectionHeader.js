@@ -6,7 +6,7 @@ const SectionHeader = ({ header }) => {
     <div className="container">
       <div className="row">
         <div className="col-12">
-          <h3 class="text-center my-5">{header}</h3>
+          <h3 className="text-center my-5">{header}</h3>
         </div>
       </div>
     </div>

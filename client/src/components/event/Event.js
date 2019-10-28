@@ -7,9 +7,11 @@ import EventTitle from './constructor/EventTitle';
 import EventIntro from './constructor/EventIntro';
 import EventDescription from './constructor/EventDescription';
 import EventDetails from './constructor/EventDetails';
-// import EventGuest from './constructor/EventGuest';
-
+import EventGuests from './constructor/EventGuests';
+import EventOrganizers from './constructor/EventOrganizers';
 import SectionHeader from '../common/SectionHeader';
+
+
 import { getEvent } from '../../actions/eventActions';
 
 class Event extends Component {
@@ -79,7 +81,14 @@ class Event extends Component {
                 currency={this.state.event.currency}
               />
             </section>
-            
+            <section id="eventGuests">
+              <SectionHeader header="GUESTS" />
+              <EventGuests guests={this.state.event.guests} />
+            </section>
+            <section id="eventOrganizers">
+              <SectionHeader header="ORGANIZERS" />
+              <EventOrganizers organizers={this.state.event.organizers} />
+            </section>
           </div>
         )}
       </div>

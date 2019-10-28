@@ -6,7 +6,7 @@ const EventTitle = ({ title }) => {
     <div className="container">
       <div className="row mt-5">
         <div className="col-12">
-        <h1 class="text-center">{title}</h1>
+        <h1 className="text-center">{title}</h1>
         </div>
       </div>
     </div>
