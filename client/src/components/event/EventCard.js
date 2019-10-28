@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Moment from 'react-moment';
 
 class EventCard extends Component {
   constructor(props) {
@@ -8,10 +9,10 @@ class EventCard extends Component {
   }
   render() {
     return (
-      <div class="row mt-5">
-        <div class="col-12 mb-2">
-          <div class="row border">
-            <div class="col-2 px-0">
+      <div className="row mt-5">
+        <div className="col-12 mb-2">
+          <div className="row border">
+            <div className="col-2 px-0">
               <a href="./event.html">
                 <img
                   src={
@@ -20,53 +21,55 @@ class EventCard extends Component {
                       : 'https://picsum.photos/200/160?random=1'
                   }
                   alt="img1"
-                  class="img-fluid"
+                  className="img-fluid"
                 />
               </a>
-              <div class="bg-dark">
-                <p class="mb-0 text-center text-light">
+              <div className="bg-dark">
+                <p className="mb-0 text-center text-light">
                   <i>{this.props.event.category}</i>
                 </p>
               </div>
             </div>
-            <div class="col-7 border-left">
-              <h3 class="mt-2">{this.props.event.title}</h3>
-              <p class="lead mb-0">{this.props.event.intro}</p>
+            <div className="col-6 border-left">
+              <h3 className="mt-2">{this.props.event.title}</h3>
+              <p className="lead mb-0">{this.props.event.intro}</p>
             </div>
-            <div class="col-2 border-left border-right">
-              <p class="lead mb-1">
-                <i class="icon fas fa-map-marker-alt"></i>
+            <div className="col-3 border-left border-right text-left">
+              <p className="lead mb-1">
+                <i className="icon fas fa-map-marker-alt text-center eventCardIcon"></i>
                 {this.props.event.city} , {this.props.event.country}
               </p>
-              <p class="lead mb-1">
-                <i class="icon fas fa-calendar-alt"></i>
-                {this.props.event.date}
+              <p className="lead mb-1">
+                <i className="icon fas fa-calendar-alt text-center eventCardIcon"></i>
+                <Moment format="D MMM YYYY" withTitle>
+                  {this.props.event.date}
+                </Moment>
               </p>
-              <p class="lead mb-1">
-                <i class="icon fas fa-clock"></i>
+              <p className="lead mb-1">
+                <i className="icon fas fa-clock text-center eventCardIcon"></i>
                 {this.props.event.time}
               </p>
-              <p class="lead mb-1">
-                <i class="icon fas fa-dollar-sign"></i>
+              <p className="lead mb-1">
+                <i className="icon fas fa-dollar-sign text-center eventCardIcon"></i>
                 {this.props.event.price}
               </p>
-              <p class="lead mb-1">
-                <i class="icon fas fa-chair"></i>
+              <p className="lead mb-1">
+                <i className="icon fas fa-chair text-center eventCardIcon"></i>
                 {this.props.event.sits}
               </p>
             </div>
-            <div class="col-1 mt-2">
-              <button class="btn btn-block btn-success btn-sm">
-                <i class="fas fa-dollar-sign"></i>
+            <div className="col-1 mt-2">
+              <button className="btn btn-block btn-success btn-sm">
+                <i className="fas fa-dollar-sign"></i>
               </button>
-              <button class="btn btn-block btn-success btn-sm">
-                <i class="fas fa-building"></i>
+              <button className="btn btn-block btn-success btn-sm">
+                <i className="fas fa-building"></i>
               </button>
-              <button class="btn btn-block btn-success btn-sm">
-                <i class="fas fa-pizza-slice"></i>
+              <button className="btn btn-block btn-success btn-sm">
+                <i className="fas fa-pizza-slice"></i>
               </button>
-              <button class="btn btn-block btn-success btn-sm">
-                <i class="fas fa-coffee"></i>
+              <button className="btn btn-block btn-success btn-sm">
+                <i className="fas fa-coffee"></i>
               </button>
             </div>
           </div>
