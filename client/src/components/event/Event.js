@@ -6,7 +6,10 @@ import EventCover from './constructor/EventCover';
 import EventTitle from './constructor/EventTitle';
 import EventIntro from './constructor/EventIntro';
 import EventDescription from './constructor/EventDescription';
+import EventDetails from './constructor/EventDetails';
+// import EventGuest from './constructor/EventGuest';
 
+import SectionHeader from '../common/SectionHeader';
 import { getEvent } from '../../actions/eventActions';
 
 class Event extends Component {
@@ -64,6 +67,19 @@ class Event extends Component {
             <section id="eventDescription">
               <EventDescription description={this.state.event.description} />
             </section>
+            <section id="eventDetails">
+              <EventDetails
+                location={this.state.event.location}
+                city={this.state.event.city}
+                country={this.state.event.country}
+                date={this.state.event.date}
+                time={this.state.event.time}
+                sits={this.state.event.sits}
+                price={this.state.event.price}
+                currency={this.state.event.currency}
+              />
+            </section>
+            
           </div>
         )}
       </div>
