@@ -14,6 +14,8 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import NotFound from './components/layout/NotFound';
 
+import Event from './components/event/Events';
+
 // Check for token
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -41,6 +43,7 @@ const App = () => {
           <Switch>
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/events" component={Event} />
             <Route path="*" component={NotFound} />
           </Switch>
           <Footer />

@@ -1,4 +1,11 @@
-import { GET_ERRORS, GET_RESPONSE, EVENTS_LOADING, ORGANIZERS_LOADING, SPONSORS_LOADING } from './types';
+import {
+  GET_ERRORS,
+  GET_RESPONSE,
+  EVENT_LOADING,
+  EVENTS_LOADING,
+  ORGANIZERS_LOADING,
+  SPONSORS_LOADING
+} from './types';
 
 export const refreshErrors = () => {
   return {
@@ -31,6 +38,11 @@ export const getResponse = data => {
 export const setLoading = data => {
   switch (data) {
     case 'event': {
+      return {
+        type: EVENT_LOADING
+      };
+    }
+    case 'events': {
       return {
         type: EVENTS_LOADING
       };
