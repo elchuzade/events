@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import EventCover from './constructor/EventCover';
 import EventTitle from './constructor/EventTitle';
+import EventIntro from './constructor/EventIntro';
+import EventDescription from './constructor/EventDescription';
 
 import { getEvent } from '../../actions/eventActions';
 
@@ -55,6 +57,12 @@ class Event extends Component {
             </section>
             <section id="eventTitle">
               <EventTitle title={this.state.event.title} />
+            </section>
+            <section id="eventIntro">
+              <EventIntro intro={this.state.event.intro} />
+            </section>
+            <section id="eventDescription">
+              <EventDescription description={this.state.event.description} />
             </section>
           </div>
         )}
