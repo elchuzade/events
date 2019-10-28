@@ -12,7 +12,7 @@ class Footer extends Component {
 
   render() {
     return (
-      <footer>
+      <footer className="mt-5">
         <div className="container">
           <div className="row">
             <div className="col-4">

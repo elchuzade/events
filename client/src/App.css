@@ -18,6 +18,21 @@
   width: 64px;
 }
 
+.icon {
+  width: 32px;
+}
+
+.eventCategory {
+  position: absolute;
+  border-radius: 30px;
+  bottom: -20px;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.myCard {
+  border: none;
+}
 
 /* -------- LOADER -------- */
 .loader {

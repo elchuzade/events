@@ -5,8 +5,8 @@ const passport = require('passport');
 const path = require('path');
 
 const users = require('./routes/api/users');
-const profile = require('./routes/api/profile');
-const event = require('./routes/api/event');
+const profiles = require('./routes/api/profile');
+const events = require('./routes/api/event');
 
 const app = express();
 
@@ -32,8 +32,8 @@ require('./config/passport')(passport);
 
 // Use routes
 app.use('/api/users', users);
-app.use('/api/profile', profile);
-app.use('/api/event', event);
+app.use('/api/profiles', profiles);
+app.use('/api/events', events);
 
 // Serve static assets if in production (Heroku stuff)
 if (process.env.NODE_ENV === 'production') {

@@ -20,7 +20,7 @@ export const getEvents = () => dispatch => {
   dispatch(setLoading('events'));
   refreshAll();
   axios
-    .get(`/api/event/`)
+    .get(`/api/events/`)
     .then(res => {
       dispatch({
         type: GET_EVENTS,
@@ -32,11 +32,11 @@ export const getEvents = () => dispatch => {
     });
 };
 
-export const getEvent = (id) => dispatch => {
+export const getEvent = id => dispatch => {
   dispatch(setLoading('event'));
   refreshAll();
   axios
-    .get(`/api/event/${id}`)
+    .get(`/api/events/${id}`)
     .then(res => {
       dispatch({
         type: GET_EVENT,

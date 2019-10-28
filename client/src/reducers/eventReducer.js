@@ -32,6 +32,7 @@ export default (state = initialState, action) => {
         loading: false
       };
     case GET_EVENT:
+      console.log(action.payload);
       return {
         ...state,
         event: action.payload,

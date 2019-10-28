@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import EventCard from './EventCard';
+
+import EventCover from './constructor/EventCover';
+import EventTitle from './constructor/EventTitle';
 
 import { getEvent } from '../../actions/eventActions';
 
@@ -44,8 +46,16 @@ class Event extends Component {
       <div>
         {spinner}
         {!spinner && (
-          <div className="container pt-5">
-            <img src="https://picsum.photos/1000" alt="img"/>
+          <div>
+            <section id="eventCover">
+              <EventCover
+                event={this.state.event.avatar}
+                category={this.state.event.category}
+              />
+            </section>
+            <section id="eventTitle">
+              <EventTitle title={this.state.event.title} />
+            </section>
           </div>
         )}
       </div>
