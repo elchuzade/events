@@ -31,3 +31,19 @@ export const getEvents = () => dispatch => {
       dispatch(getError(err.response.data));
     });
 };
+
+export const getEvent = (id) => dispatch => {
+  dispatch(setLoading('event'));
+  refreshAll();
+  axios
+    .get(`/api/event/${id}`)
+    .then(res => {
+      dispatch({
+        type: GET_EVENT,
+        payload: res.data
+      });
+    })
+    .catch(err => {
+      dispatch(getError(err.response.data));
+    });
+};

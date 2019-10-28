@@ -13,7 +13,7 @@ class EventCard extends Component {
         <div className="col-12 mb-2">
           <div className="row border">
             <div className="col-2 px-0">
-              <a href="./event.html">
+              <a href={`/events/${this.props.event._id}`}>
                 <img
                   src={
                     this.props.event.avatar

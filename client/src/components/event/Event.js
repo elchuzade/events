@@ -3,18 +3,20 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import EventCard from './EventCard';
 
-import { getEvents } from '../../actions/eventActions';
+import { getEvent } from '../../actions/eventActions';
 
-class Events extends Component {
+class Event extends Component {
   constructor(props) {
     super(props);
     this.state = {
       errors: {},
-      events: []
+      event: {}
     };
   }
   componentDidMount() {
-    this.props.getEvents();
+    if (this.props.match.params.id) {
+      this.props.getEvent(this.props.match.params.id);
+    }
   }
   componentWillReceiveProps(nextProps) {
     // set errors
@@ -22,18 +24,18 @@ class Events extends Component {
       this.setState({ errors: nextProps.errors });
     }
     // Set events
-    if (nextProps.event && nextProps.event.events) {
+    if (nextProps.event && nextProps.event.event) {
       this.setState({
-        events: nextProps.event.events
+        event: nextProps.event.event
       });
     }
   }
   render() {
     const { errors } = this.state;
     // const { isAuthenticated } = this.props.auth;
-    const { events, loading } = this.props.event;
+    const { event, loading } = this.props.event;
     let spinner = null;
-    if (events === null || loading) {
+    if (event === null || loading) {
       spinner = <div className="loader" />;
     } else {
       spinner = null;
@@ -43,10 +45,7 @@ class Events extends Component {
         {spinner}
         {!spinner && (
           <div className="container pt-5">
-            {this.state.events.length > 0 &&
-              this.state.events.map(event => (
-                <EventCard key={event._id} event={event} />
-              ))}
+            <img src="https://picsum.photos/1000" alt="img"/>
           </div>
         )}
       </div>
@@ -54,11 +53,11 @@ class Events extends Component {
   }
 }
 
-Events.propTypes = {
+Event.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   event: PropTypes.object.isRequired,
-  getEvents: PropTypes.func.isRequired
+  getEvent: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -70,6 +69,6 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    getEvents
+    getEvent
   }
-)(Events);
+)(Event);
