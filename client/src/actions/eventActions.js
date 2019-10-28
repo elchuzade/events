@@ -8,7 +8,7 @@ import {
   setLoading
 } from './commonActions';
 
-import { GET_EVENTS } from './types';
+import { GET_EVENT, GET_EVENTS } from './types';
 
 const refreshAll = () => dispatch => {
   dispatch(refreshErrors());
@@ -20,7 +20,7 @@ export const getEvents = () => dispatch => {
   dispatch(setLoading('events'));
   refreshAll();
   axios
-    .get('/api/events/')
+    .get(`/api/event/`)
     .then(res => {
       dispatch({
         type: GET_EVENTS,

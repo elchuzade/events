@@ -10,7 +10,7 @@ module.exports = function validateRegisterInput(data) {
   data.password2 = !isEmpty(data.password2) ? data.password2 : '';
   data.type = !isEmpty(data.type) ? data.type : '';
 
-  if (data.type !== 'sponsor' || data.type !== 'organizer') {
+  if (data.type !== 'sponsor' && data.type !== 'organizer') {
     errors.type = 'Account type is incorrect';
   }
   if (Validator.isEmpty(data.type)) {

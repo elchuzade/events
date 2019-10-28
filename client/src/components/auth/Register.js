@@ -12,7 +12,6 @@ class Register extends Component {
   constructor() {
     super();
     this.state = {
-      type: '',
       name: '',
       email: '',
       password: '',
@@ -55,6 +54,7 @@ class Register extends Component {
       password2: this.state.password2,
       type: this.state.type
     };
+    console.log(this.state.type);
     this.props.registerUser(newUser, this.props.history);
   };
 
