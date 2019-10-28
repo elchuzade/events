@@ -4,23 +4,14 @@ const isEmpty = require('./is-empty');
 module.exports = function validateSponsorship(data) {
   let errors = {};
 
-  data.sponsorship.title = !isEmpty(data.sponsorship.title)
-    ? data.sponsorship.title
-    : '';
+  data.title = !isEmpty(data.title) ? data.title : '';
+  data.price = !isEmpty(data.price) ? data.price : '';
 
-  for (let i = 0; i < data.sponsorship.features.length; i++) {
-    data.sponsorship.features[i].name = !isEmpty(
-      data.sponsorship.features[i].name
-    )
-      ? data.sponsorship.features[i].name
-      : '';
-    if (Validator.isEmpty(data.sponsorship.features[i].name)) {
-      errors.sponsorship = 'Sponsorship features can not be empty';
-    }
-  }
-
-  if (Validator.isEmpty(data.sponsorship.title)) {
+  if (Validator.isEmpty(data.title)) {
     errors.sponsorship = 'Sponsorship title can not be empty';
+  }
+  if (!isEmpty(data.price) && !Validator.isFloat(data.price.toString())) {
+    errors.price = 'Sponsorship price is incorrect';
   }
 
   return {

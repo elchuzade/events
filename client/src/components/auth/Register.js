@@ -18,7 +18,7 @@ class Register extends Component {
       password: '',
       password2: '',
       errors: {},
-      checked: false
+      type: 'organizer'
     };
   }
 
@@ -35,7 +35,11 @@ class Register extends Component {
   };
 
   handleChange = checked => {
-    this.setState({ checked });
+    let type = 'organizer';
+    if (checked) {
+      type = 'sponsor';
+    }
+    this.setState({ type });
   };
 
   onChange = e => {
@@ -48,9 +52,9 @@ class Register extends Component {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
-      password2: this.state.password2
+      password2: this.state.password2,
+      type: this.state.type
     };
-
     this.props.registerUser(newUser, this.props.history);
   };
 
@@ -86,27 +90,35 @@ class Register extends Component {
                 <div className="card-body">
                   <div className="my-1 row align-items-center pb-3">
                     <span
-                      className={classnames('mx-4 col h4 my-0 py-1 accountTypePassive', {
-                        accountTypeActive: !this.state.checked
-                      })}
+                      className={classnames(
+                        'mx-4 col h4 my-0 py-1 accountTypePassive',
+                        {
+                          accountTypeActive: this.state.type === 'organizer'
+                        }
+                      )}
                     >
                       ORGANIZER
                     </span>
                     <Switch
                       onColor={'#DDD'}
                       offColor={'#DDD'}
-                      offHandleColor={"#080"}
-                      onHandleColor={"#080"}
+                      offHandleColor={'#080'}
+                      onHandleColor={'#080'}
                       checkedIcon={false}
                       uncheckedIcon={false}
                       width={100}
+                      height={20}
+                      handleDiameter={25}
                       onChange={this.handleChange}
-                      checked={this.state.checked}
+                      checked={this.state.type === 'sponsor' ? true : false}
                     />
                     <span
-                      className={classnames('mx-4 col h4 my-0 py-1 accountTypePassive', {
-                        accountTypeActive: this.state.checked
-                      })}
+                      className={classnames(
+                        'mx-4 col h4 my-0 py-1 accountTypePassive',
+                        {
+                          accountTypeActive: this.state.type === 'sponsor'
+                        }
+                      )}
                     >
                       SPONSOR
                     </span>

@@ -130,13 +130,12 @@ const EventSchema = new Schema(
         title: {
           type: String
         },
-        features: [
-          {
-            name: {
-              type: String
-            }
-          }
-        ]
+        price: {
+          type: Number
+        },
+        description: {
+          type: String
+        }
       }
     ]
   },

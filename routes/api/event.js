@@ -762,7 +762,8 @@ router.post(
         }
         event.sponsorships.push({
           title: req.body.title,
-          features: req.body.features
+          price: req.body.price,
+          description: req.body.description
         });
         event
           .save()
@@ -832,7 +833,8 @@ router.put(
         for (let i = 0; i < event.sponsorships.length; i++) {
           if (event.sponsorships[i]._id === req.params.sponsorshipId) {
             event.sponsorships[i].title = req.body.title;
-            event.sponsorships[i].features = req.body.features;
+            event.sponsorships[i].price = req.body.price;
+            event.sponsorships[i].description = req.body.description;
           }
         }
         event
