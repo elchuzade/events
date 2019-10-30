@@ -87,6 +87,7 @@ class Event extends Component {
             </section>
             <section id="eventOrganizers">
               <SectionHeader header="ORGANIZERS" />
+              {console.log(this.state.event.organizers)}
               <EventOrganizers organizers={this.state.event.organizers} />
             </section>
           </div>

@@ -33,8 +33,8 @@ router.post(
     if (!isValid) return res.status(400).json(errors);
     Profile.findOne({ user: req.user.id })
       .then(profile => {
-        if (profile.type !== "organizer") {
-          errors.profile = "You must have an organizer account";
+        if (profile.type !== 'organizer') {
+          errors.profile = 'You must have an organizer account';
           return res.status(400).json(errors);
         }
         let organizers = [];
@@ -397,8 +397,8 @@ router.post(
     const errors = {};
     Profile.findOne({ user: req.user.id })
       .then(profile => {
-        if (profile.type !== "organizer") {
-          errors.profile = "You must have an organizer account";
+        if (profile.type !== 'organizer') {
+          errors.profile = 'You must have an organizer account';
           return res.status(400).json(errors);
         }
         Event.findById(req.params.id)
@@ -600,8 +600,8 @@ router.post(
     const errors = {};
     Profile.findOne({ user: req.user.id })
       .then(profile => {
-        if (profile.type !== "sponsor") {
-          errors.profile = "You must have a sponsor account";
+        if (profile.type !== 'sponsor') {
+          errors.profile = 'You must have a sponsor account';
           return res.status(400).json(errors);
         }
         Event.findById(req.params.id)
@@ -854,5 +854,34 @@ router.put(
       });
   }
 );
+
+// @route GET api/events/:id/organizers
+// @desc Get organizers' profiles of the event
+router.get('/:id/organizers', (req, res) => {
+  Event.findById(req.params.id)
+    .then(event => {
+      let profileIds = event.organizers.map(organizer => organizer.profile);
+      Profile.find({ _id: { $in: profileIds } })
+        .then(profiles => {
+          let profileObjects = profiles.map(({ _id, avatar, name, title }) => ({
+            _id,
+            avatar,
+            name,
+            title
+          }));
+          return res.status(201).json(profileObjects);
+        })
+        .catch(err => {
+          errors.profile = 'Profiles not found';
+          console.log(err);
+          return res.status(404).json(errors);
+        });
+    })
+    .catch(err => {
+      errors.event = 'Event not found';
+      console.log(err);
+      return res.status(404).json(errors);
+    });
+});
 
 module.exports = router;

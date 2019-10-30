@@ -18,7 +18,7 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
-// @route POST api/profile/
+// @route POST api/profiles/
 // @desc Update profile information
 router.post(
   '/',
@@ -55,7 +55,7 @@ router.post(
   }
 );
 
-// @route POST api/profile/avatar
+// @route POST api/profiles/avatar
 // @desc Update profile avatar
 router.post(
   '/avatar',
@@ -114,7 +114,7 @@ router.post(
   }
 );
 
-// @route GET api/profile/
+// @route GET api/profiles/
 // @desc Get my profile
 router.get(
   '/',
@@ -130,7 +130,7 @@ router.get(
   }
 );
 
-// @route GET api/profile/all
+// @route GET api/profiles/all
 // @desc Get all organizer profiles
 router.get('/all', (req, res) => {
   Profile.find()
@@ -153,7 +153,7 @@ router.get('/all', (req, res) => {
     });
 });
 
-// @route GET api/profile/:id
+// @route GET api/profiles/:id
 // @desc Get organizer profile by id
 router.get('/:id', (req, res) => {
   Profile.findById(req.params.id)
