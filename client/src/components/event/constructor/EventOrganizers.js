@@ -8,7 +8,7 @@ const EventOrganizers = ({ organizers }) => {
       <div className="row">
         {organizers.length > 0 &&
           organizers.map(organizer => (
-            <EventOrganizerCard key={organizer._id} organizer={organizer} />
+            <EventOrganizerCard key={organizer._id} organizer={organizer.profile} />
           ))}
       </div>
     </div>

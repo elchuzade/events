@@ -5,10 +5,12 @@ const Schema = mongoose.Schema;
 const ProfileSchema = new Schema(
   {
     type: {
-      type: String
+      type: String,
+      required: true
     },
     user: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'profile',
       required: true
     },
     name: {

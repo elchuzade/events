@@ -135,14 +135,9 @@ const EventSchema = new Schema(
     ],
     sponsorships: [
       {
-        title: {
-          type: String
-        },
-        price: {
-          type: Number
-        },
-        description: {
-          type: String
+        sponsorship: {
+          type: Schema.Types.ObjectId,
+          ref: 'sponsorship'
         }
       }
     ]
