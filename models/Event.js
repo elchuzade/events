@@ -108,7 +108,8 @@ const EventSchema = new Schema(
     organizers: [
       {
         profile: {
-          type: String
+          type: Schema.Types.ObjectId,
+          ref: 'profile'
         },
         message: {
           type: String
@@ -121,7 +122,8 @@ const EventSchema = new Schema(
     sponsors: [
       {
         profile: {
-          type: String
+          type: Schema.Types.ObjectId,
+          ref: 'profile'
         },
         message: {
           type: String

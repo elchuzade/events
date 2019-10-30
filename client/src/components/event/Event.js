@@ -11,7 +11,6 @@ import EventGuests from './constructor/EventGuests';
 import EventOrganizers from './constructor/EventOrganizers';
 import SectionHeader from '../common/SectionHeader';
 
-
 import { getEvent } from '../../actions/eventActions';
 
 class Event extends Component {

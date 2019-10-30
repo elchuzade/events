@@ -70,7 +70,8 @@ const ProfileSchema = new Schema(
     pastEvents: [
       {
         event: {
-          type: String
+          type: Schema.Types.ObjectId,
+          ref: 'event'
         },
         message: {
           type: String
@@ -83,7 +84,8 @@ const ProfileSchema = new Schema(
     futureEvents: [
       {
         event: {
-          type: String
+          type: Schema.Types.ObjectId,
+          ref: 'event'
         },
         message: {
           type: String

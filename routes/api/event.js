@@ -727,6 +727,8 @@ router.post(
 // @desc Get all events
 router.get('/', (req, res) => {
   Event.find()
+    .populate('organizers.profile', ['_id', 'avatar', 'name', 'title'])
+    .populate('sponsors.profile', ['_id', 'avatar', 'name', 'title'])
     .then(events => res.status(201).json(events))
     .catch(err => {
       errors.events = 'Events not found';
@@ -739,7 +741,27 @@ router.get('/', (req, res) => {
 // @desc Get all events
 router.get('/:id', (req, res) => {
   Event.findById(req.params.id)
-    .then(event => res.status(201).json(event))
+    .populate('organizers.profile', ['_id', 'avatar', 'name', 'title'])
+    .populate('sponsors.profile', ['_id', 'avatar', 'name', 'title'])
+    .then(event => {
+      let profileIds = event.organizers.map(organizer => organizer.profile);
+      Profile.find({ _id: { $in: profileIds } })
+        .then(profiles => {
+          let profileObjects = profiles.map(({ _id, avatar, name, title }) => ({
+            _id,
+            avatar,
+            name,
+            title
+          }));
+          event.organizers.forEach(organizer => {});
+          return res.status(201).json(event);
+        })
+        .catch(err => {
+          errors.profile = 'Profiles not found';
+          console.log(err);
+          return res.status(404).json(errors);
+        });
+    })
     .catch(err => {
       errors.event = 'Event not found';
       console.log(err);
@@ -854,34 +876,5 @@ router.put(
       });
   }
 );
-
-// @route GET api/events/:id/organizers
-// @desc Get organizers' profiles of the event
-router.get('/:id/organizers', (req, res) => {
-  Event.findById(req.params.id)
-    .then(event => {
-      let profileIds = event.organizers.map(organizer => organizer.profile);
-      Profile.find({ _id: { $in: profileIds } })
-        .then(profiles => {
-          let profileObjects = profiles.map(({ _id, avatar, name, title }) => ({
-            _id,
-            avatar,
-            name,
-            title
-          }));
-          return res.status(201).json(profileObjects);
-        })
-        .catch(err => {
-          errors.profile = 'Profiles not found';
-          console.log(err);
-          return res.status(404).json(errors);
-        });
-    })
-    .catch(err => {
-      errors.event = 'Event not found';
-      console.log(err);
-      return res.status(404).json(errors);
-    });
-});
 
 module.exports = router;
